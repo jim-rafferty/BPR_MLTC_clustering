@@ -266,45 +266,6 @@ class ProfileRegressionModel(object):
         return assignment
 
 
-#    def _calculate_assignments(
-#        self, 
-#        phi,
-#        cluster_probs,
-#        X
-#    ): 
-#        """
-#        phi: (K, D)
-#        cluster_probs: (K,)
-#        X: (N, D)
-#        returns: resp (N, K)
-#        """
-#        # Compute log p(x_i | theta_k) for all k
-#        def log_lik_k(phi_k):
-#            return (
-#                dist.Bernoulli(phi_k)
-#                .to_event(1)
-#                .log_prob(X)
-#            )
-#    
-#        assign_log_lik = jax.vmap(log_lik_k)(phi)
-#        assign_log_lik = assign_log_lik.T
-#    
-#        log_cluster_probs = jnp.log(cluster_probs)
-#        assign_log_lik_norm = log_liks + log_cluster_probs[None, :]
-#    
-#        log_assignment = assign_log_lik_norm - logsumexp(assign_log_lik_norm, axis=-11, keepdims=True)
-#        assignment = jnp.exp(log_assignment)
-#    
-#        return assignment
-#        
-#        #assign_log_lik = jnp.stack(log_liks, axis=-1)
-        #assign_log_lik_norm = log_cluster_probs[None, :] + assign_log_lik
-        #
-        #log_assignment = (
-        #    assign_log_lik_norm - jax.scipy.special.logsumexp(assign_log_lik_norm, axis=-1, keepdims=True)
-        #)
-        #
-        #numpyro.deterministic("assignment", jnp.exp(log_assignment))
         
     @nw.narwhalify
     def fit(
@@ -541,12 +502,6 @@ class ProfileRegressionModel(object):
                 "assignment_proba":("chain", "draw", "assignment_proba_dim_0", "assignment_proba_dim_1"),
                 "assignment":("chain", "draw", "assignment_dim_0")
             }
-            #assignment_proba = (
-            #    ("chain", "draw", "assignment_proba_dim_0", "assignment_proba_dim_1"), soft_assignments
-            #),
-            #assignment = (
-            #    ("chain", "draw", "assignment_dim_0"), assignment
-            #)
         )
         
         # Making sure cluster labelling is correct when the number of chains is > 1.
